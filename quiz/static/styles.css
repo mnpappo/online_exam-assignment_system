@@ -1,0 +1,18 @@
+.jumbotron {
+    margin-bottom: 0%;
+}
+.progress_bar {
+    overflow: hidden;
+}
+#startValuesAndTargetExample {
+    font-size: 32px;
+}
+
+.single_block {
+    color: #444;
+}
+
+footer {
+    padding: 20px 0px;
+    background-color: #e9ecee;
+}

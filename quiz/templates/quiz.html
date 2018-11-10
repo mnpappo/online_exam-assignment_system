@@ -1,0 +1,221 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+
+  <!-- custom header js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+
+  <title>Online Exam System - Home</title>
+</head>
+
+<body>
+  <header>
+    <div class="collapse bg-dark" id="navbarHeader">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-8 col-md-7 py-4">
+            <h4 class="text-white">About</h4>
+            <p class="text-muted">Some About stuff here</p>
+          </div>
+          <div class="col-sm-4 offset-md-1 py-4">
+            <h4 class="text-white">Menu</h4>
+            <ul class="list-unstyled">
+              {% if user.is_authenticated %}
+              <a href="/admin/logout/?next=/"> Logout</a>
+              {% elif not user.is_authenticated %}
+              <li><a href="/admin" class="text-white">Login</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+      <div class="container d-flex justify-content-between">
+        <a href="/" class="navbar-brand d-flex align-items-center">
+          <!-- <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> -->
+          <strong>NSTU - OES</strong>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader"
+          aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main role="main">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-10">
+          <section class="jumbotron text-center">
+              <div class="container">
+                <h1 class="jumbotron-heading">{{ qz.quiz_name }}</h1>
+                {% if rlen > 0 %}
+                <h3 style="color: red">Congrechushelon! You Got {{ result }}</h3>
+                {% endif %}
+                <p class="lead text-muted">You can submit your answers once, if you submit once the re-exam is impossible.</p>
+                <br>
+                <br>
+                <ul class="text-left">
+                    <li>Questions: {{ questions.count }} || Mark: {{ questions.count }}</li>
+                    <li>Duration: {{ qz.duration }} minutes</li>
+                    <li>Start Time: {{ qz.pub_date_time }}</li>
+                    <li>Published: {{ qz.created_at }}</li>
+                </ul>
+              </div>
+            </section>
+        </div>
+        <div class="col-sm-2">
+            <div id="startValuesAndTargetExample" class="">
+                <div class="values"></div>
+                <div class="progress_bar">.</div>
+            </div>
+            <div class="exam_progress">
+              <h3 class="time_info">
+
+              </h3>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="album py-5 bg-light" id="questions">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-md-12">
+            <form method="POST" action="/result_processing/{{qz.id}}">
+              {% csrf_token %}
+              <div class="form-group">
+                <ol>
+                    {% for qs in questions %}
+                    <li>
+                      {{ qs.question_text }}
+                      <select name="question_x" class="form-control form-control-sm">
+                      <ol>
+                        {% for ch in qs.choice_set.all %}
+                        <li>
+                          <option value="{{ ch.id }}">{{ ch.choice_text }}</option>
+                        </li>
+                        {% endfor %}
+                      </ol>
+                    </select>
+                    </li>
+                    {% endfor %}
+                </ol>
+                <button type="submit" class="float-right btn btn-primary mb-2">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+
+
+
+
+  <footer class="text-muted">
+    <div class="container">
+      <p class="float-right">
+        <a href="#">Back to top</a>
+      </p>
+      <p>Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
+      <p>New to Bootstrap? <a href="../../">Visit the homepage</a> or read our <a href="../../getting-started/">getting
+          started guide</a>.</p>
+    </div>
+  </footer>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
+  <!-- timer -->
+  <script src="{% static 'easytimer.min.js' %}"></script>
+  <!-- custom scripts -->
+  <script src="{% static 'custom.js' %}"></script>
+  <script>
+    
+    
+  </script>
+  <script>
+      $(document).ready(function () {
+        //Disable cut copy paste
+        $('body').bind('cut copy paste', function (e) {
+            e.preventDefault();
+        });
+      
+        //Disable mouse right click
+        $("body").on("contextmenu",function(e){
+            return false;
+        });
+        // calculate timing
+        exam_date = moment('{{ qz.pub_date_time|date:"Y,m,d, h:i:s A"  }}');
+        current_time = moment('{% now "Y,m,d, h:i:s A" %}');
+        
+        remaining_time = moment.duration(exam_date.diff(current_time));
+        remaining_time = remaining_time.asSeconds();
+
+        remaining_time_pi = Math.floor(Math.abs(remaining_time));
+
+        
+        console.log(remaining_time);
+        console.log(remaining_time_pi);
+
+        if (remaining_time < 0 && remaining_time <= {% widthratio qz.duration 1 60 %}) {
+          if (remaining_time_pi >= {% widthratio qz.duration 1 60 %}) {
+            $('.values').hide();
+            $('#questions').hide();
+            $('#startValuesAndTargetExample .progress_bar').text('Bashai jao, porikhhar time shesh');
+          }
+          console.log("Exam ongoing");
+          // for timer
+          var timer = new Timer();
+    
+          timer.start({
+            // countdown: true,
+            precision: 'seconds', 
+            startValues: {seconds: remaining_time_pi }, 
+            target: {minutes: {{ qz.duration }} },
+          });
+          $('#startValuesAndTargetExample .values').html(timer.getTimeValues().toString());
+          timer.addEventListener('secondsUpdated', function (e) {
+              $('#startValuesAndTargetExample .values').html(timer.getTimeValues().toString());
+              $('#startValuesAndTargetExample .progress_bar').html($('#startValuesAndTargetExample .progress_bar').html() + '.');
+          });
+          timer.addEventListener('targetAchieved', function (e) {
+              $('#startValuesAndTargetExample .progress_bar').html('COMPLETE!!');
+          });
+        }
+        else {
+          $('#questions').hide();
+          $('.time_info').text('Exam Not Started Yet!');
+          $('#startValuesAndTargetExample').hide();
+        }
+
+      });
+      
+    </script>
+</body>
+
+</html>
