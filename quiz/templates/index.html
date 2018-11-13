@@ -1,4 +1,5 @@
 {% load static %}
+{% load user_tags %}
 <!doctype html>
 <html lang="en">
 
@@ -29,7 +30,7 @@
             <p class="text-muted">Some About stuff here</p>
           </div>
           <div class="col-sm-4 offset-md-1 py-4">
-            <h4 class="text-white">Contact</h4>
+            <h4 class="text-white">Menu</h4>
             <ul class="list-unstyled">
               {% if user.is_authenticated %}
               <li>
@@ -67,12 +68,18 @@
           ea aut!</p>
           <p>
               {% if user.is_authenticated %}
-              <a href="#" data-toggle="modal" data-target="#main_modal" class="btn btn-primary my-2">Take an Exam Now</a> 
+
+                {% if request.user|has_group:"Teachers" %}
+                <a href="/admin/quiz/" class="btn btn-primary my-2">Manage Quiz</a>
+                <a href="/admin/assignment/" class="btn btn-primary my-2">Manage Assignment</a> 
+                {% elif request.user|has_group:"Students" %}
+                <a href="#" data-toggle="modal" data-target="#main_modal" class="btn btn-primary my-2">Take an Exam Now</a> 
+                <a href="/admin/assignment/submitassignment/" class="btn btn-secondary my-2">Submit Assignment</a>
+                {% endif %} 
+                
               {% elif not user.is_authenticated %}
               <a href="/admin/login/?next=/" class="btn btn-primary my-2">Login</a>
               {% endif %}
-          
-          <a href="/admin" class="btn btn-secondary my-2">Go to Dashboard</a>
         </p>
       </div>
     </section>
@@ -90,7 +97,7 @@
                 <p class="card-text">
                   Start time: {{ qz.pub_date_time }} <br>
                   Publish time: {{ qz.created_at }} <br>
-                  Duration:{{ qz.duration }} hours
+                  Duration: {{ qz.duration }} hours
                 </p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">

@@ -23,6 +23,8 @@ class SubmittedAssignmentAdmin(admin.ModelAdmin):
         qs = super(SubmittedAssignmentAdmin, self).get_queryset(request)
         if request.user.is_superuser:
             return qs
+        elif request.user.groups.filter(name="Teachers").exists():
+            return qs
         return qs.filter(student=request.user)
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
